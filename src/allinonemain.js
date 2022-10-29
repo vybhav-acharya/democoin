@@ -4,7 +4,7 @@ var express =require('express');
 
 var {
     Block, generatenextBlockWithTransaction, generateRawNextBlock, getAccountBalance,
-    getBlockchain,  connectToPeers, getSockets, initP2PServer
+    getBlockchain,  connectToPeers, getSockets, initP2PServer,getBlocks
 } =require( './allinoneblockchain');
 
 var {getPublicFromWallet, initWallet} =require( './wallet');
@@ -22,6 +22,10 @@ const initHttpServer = (myHttpPort) => {
             res.status(400).send(err.message);
         }
     });
+    app.get('/transactions',(req,res)=>{
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(getBlocks()));
+    })
 
     app.get('/blocks', (req, res) => {
         console.log(getBlockchain())
@@ -44,14 +48,14 @@ const initHttpServer = (myHttpPort) => {
     //     }
     // });
 
-    // app.post('/mineBlock', (req, res) => {
-    //     const newBlock = generateNextBlock();
-    //     if (newBlock === null) {
-    //         res.status(400).send('could not generate block');
-    //     } else {
-    //         res.send(newBlock);
-    //     }
-    // });
+    app.get('/mineBlock', (req, res) => {
+        const newBlock = generateRawNextBlock();
+        if (newBlock === null) {
+            res.status(400).send('could not generate block');
+        } else {
+            res.send(newBlock);
+        }
+    });
 
     app.get('/balance', (req, res) => {
         const balance = getAccountBalance();
