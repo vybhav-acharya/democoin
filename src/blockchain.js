@@ -342,8 +342,10 @@ const connectToPeers = (li) => {
     });
     ws.on('error', () => {
         console.log('connection failed');
+        return false
     });
 }
+return true
 };
 
 const broadCastTransactionPool = () => {
