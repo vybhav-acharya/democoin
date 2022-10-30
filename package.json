@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "node src/allinonemain.js  --openssl-legacy-provider start"
+    "start": "node src/main.js  --openssl-legacy-provider start"
   },
   "dependencies": {
     "axios": "^0.16.2",

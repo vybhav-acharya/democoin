@@ -4,11 +4,11 @@ var {Server} =require( 'ws');
 var crypto=require('crypto')
 
 var {hexToBinary,toHexString}=require("./utils")
-var _=require('lodash')
+
 
 
 var {  validateTransaction,sign,getPublicFromWallet} =require( './wallet');
-const { makeTransaction } = require('./allinone');
+const { makeTransaction } = require('./transaction');
 
 class Block {
 
@@ -332,14 +332,18 @@ const broadcastData = (block) => {
     broadcast(responseLatestBlock(block));
 };
 
-const connectToPeers = (newPeer) => {
-    const ws = new WebSocket(newPeer);
+const connectToPeers = (li) => {
+    for(let np in li)
+    {   let newPeer=li[np]
+    
+        const ws = new WebSocket(newPeer);
     ws.on('open', () => {
         initConnection(ws);
     });
     ws.on('error', () => {
         console.log('connection failed');
     });
+}
 };
 
 const broadCastTransactionPool = () => {

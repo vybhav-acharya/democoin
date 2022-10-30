@@ -5,7 +5,7 @@ var express =require('express');
 var {
     Block, generatenextBlockWithTransaction, generateRawNextBlock, getAccountBalance,
     getBlockchain,  connectToPeers, getSockets, initP2PServer,getBlocks
-} =require( './allinoneblockchain');
+} =require( './blockchain');
 
 var {getPublicFromWallet, initWallet} =require( './wallet');
 
@@ -33,20 +33,7 @@ const initHttpServer = (myHttpPort) => {
         res.send(JSON.stringify(getBlockchain()));
     });
 
-    
 
-    // app.post('/mineRawBlock', (req, res) => {
-    //     if (req.body.data == null) {
-    //         res.send('data parameter is missing');
-    //         return;
-    //     }
-    //     const newBlock = generateRawNextBlock(req.body.data);
-    //     if (newBlock === null) {
-    //         res.status(400).send('could not generate block');
-    //     } else {
-    //         res.send(newBlock);
-    //     }
-    // });
 
     app.get('/mineBlock', (req, res) => {
         const newBlock = generateRawNextBlock();
