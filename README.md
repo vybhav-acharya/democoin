@@ -7,11 +7,13 @@ Steps for running
 3) run the requests in thunderclient
 
 
-BlockChain
+BlockChain 
+
 A set of blocks which are connected to each other using hashes , whose copy is stored with all the nodes in the network 
 Data held in each block in blockchain- transactions
 
 Transactions
+
 Each transaction has a sender and a receiver , with a specified amount. This data is digitally signed.
 Each sender/receiver has an address which comrpises of two parts- public key and private key. 
 Each transaction , when sent by the sender is digitally signed with their private key. 
@@ -19,10 +21,12 @@ When this transaction reaaches the other nodes , the nodes verify that this tran
 
 
 P2P system
+
 We have used web sockets for each node to communicate with the other nodes.
 The nodes which either mine a transaction/block will boradcast this detail to all the other nodes.The other nodes will always have their web sockets in listening mode , therfore updating themselves on correct verification
 
 Working:
+
 Initally the docker deployment will spin up 3 nodes, which will have HTTP and websocket urls
 The nodes need to be connected to each other using the /addPeer request.
 Make sure that each node has 2 values in the response when /peers request is sent.(Each node needs to be connected to the other nodes)
