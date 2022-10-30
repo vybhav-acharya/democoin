@@ -25,6 +25,10 @@ P2P system
 We have used web sockets for each node to communicate with the other nodes.
 The nodes which either mine a transaction/block will boradcast this detail to all the other nodes.The other nodes will always have their web sockets in listening mode , therfore updating themselves on correct verification
 
+PoW-Proof of Work
+
+Each hash is created with a proof of work- we have implemented a simple problem. The new hash which is generated should have the difficulty of 0s in its value
+
 Working:
 
 Initally the docker deployment will spin up 3 nodes, which will have HTTP and websocket urls
