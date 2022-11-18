@@ -1,4 +1,4 @@
 FROM node:16.13.0-alpine
-COPY . ./
 
-ENTRYPOINT npm install && npm start
+COPY package.json ./
+ENTRYPOINT npm start 

@@ -1,0 +1,45 @@
+# version: '2'
+# services:
+#   node1:
+#     environment:
+#       - HTTP_PORT=3001
+#       - REACT_APP_HTTP_PORT=3001
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     ports:
+#       - "3001:3001"
+#       - "4001:3000"
+#     volumes:
+#       - /home/ubuntu/Desktop/democoin
+  
+   
+     
+  # node2:
+  #   environment:
+  #     - PEERS=ws://node1:6002
+  #     - HTTP_PORT=3002
+  #     - REACT_APP_HTTP_PORT=3002
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - node1:node1
+  #   ports:
+  #     - "3002:3002"
+  #     - "4002:3000"
+  # node3:
+  #   environment:
+  #     - HTTP_PORT=3003
+  #     - REACT_APP_HTTP_PORT=3003
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3003:3003"
+  #     - "4003:3000"
+  #   links:
+  #     - node1:node1
+  #     - node2:node2
+   
+ 

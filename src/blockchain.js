@@ -30,7 +30,7 @@ class Block {
 
 let blockchain = [];
 let blocks=[]
-let difficulty=0
+
 
 // the unspent txOut of genesis block is set to unspentTxOuts on startup
 
@@ -66,25 +66,23 @@ const generateRawNextBlock = () => {
         let newBlock;
         if(blockchain.length==0)
         {
-            const difficulty = getDifficulty(blockchain);
-        console.log("in generaterawblock with difficulty"+difficulty)
+            var difficulty = getDifficulty(blockchain);
+        // console.log("in generaterawblock with difficulty"+difficulty)
+        //   difficulty=8;  
         const nextIndex = blockchain.length+1;
-        console.log("in generaterawblock with nextIndex"+nextIndex)
+        // console.log("in generaterawblock with nextIndex"+nextIndex)
         const nextTimestamp =  Math.round(new Date().getTime() / 1000);
              newBlock = findBlock(1, "316534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7", nextTimestamp, getLatestBlockData(), difficulty);
 
         }
         else
         {
-            
-    
-           
             const previousBlock = getLatestBlock()
-    console.log("in generaterawblock with previous index"+previousBlock.index)
+    // console.log("in generaterawblock with previous index"+previousBlock.index)
     const difficulty = getDifficulty(blockchain);
-    console.log("in generaterawblock with difficulty"+difficulty)
+    // console.log("in generaterawblock with difficulty"+difficulty)
     const nextIndex = blockchain.length+1;
-    console.log("in generaterawblock with nextIndex"+nextIndex)
+    // console.log("in generaterawblock with nextIndex"+nextIndex)
     const nextTimestamp =  Math.round(new Date().getTime() / 1000);
     
      newBlock = findBlock(nextIndex, previousBlock.hash, nextTimestamp, blocks[blocks.length-1], difficulty);
@@ -94,6 +92,7 @@ const generateRawNextBlock = () => {
         var myAddress=getPublicFromWallet()
         
         blockchain.push(newBlock)
+        amount_here+=5
        if(newBlock.data.receiver==myAddress)
        amount_here+=newBlock.data.amount
        if(newBlock.data.sender==myAddress)
@@ -110,7 +109,7 @@ else{
 
 };
 
-// gets the unspent transaction outputs owned by the wallet
+
 
 
 let amount_here=0
@@ -131,9 +130,12 @@ const generatenextBlockWithTransaction = (sender,receiver,amount) => {
     blockData["signature"]=signature
     console.log("donw with generate block with transaction")
     if(validateTransaction(blockData,sender))
-        {blocks.push(blockData)
-        broadcastData(blockData);}
-    return blockData
+        {
+            blocks.push(blockData)
+        broadcastData(blockData);
+        return "added the transaction"}
+        return "not done transaction"
+    
     
 };
 
@@ -163,9 +165,9 @@ const calculateHash = (index, previousHash, timestamp, data,
 
 
 const hashMatchesDifficulty = (hash, difficulty) => {
-    console.log("we here in hashmatchesdifficulty, difficulty being "+difficulty)
+    // console.log("we here in hashmatchesdifficulty, difficulty being "+difficulty)
     if(difficulty===0)return true;
-    console.log("came here ;(")
+    // console.log("came here ;(")
     const hashInBinary = hexToBinary(hash);
     let requiredPrefix=''
     for(let i=0;i<difficulty.valueOf() ;i++)requiredPrefix+='0'
@@ -179,7 +181,7 @@ const updateAmount =(transaction)=>{
    
     var ret=0
     var myAddress=getPublicFromWallet()
-    console.log("In UpdateAmount "+transaction.data.amount)
+    // console.log("In UpdateAmount "+transaction.data.amount+"sender is "+transaction.data.sender+"receiver is"+transaction.data.receiver)
     // if(transaction.sender!=undefined || transaction.receiver!=undefined || transaction.amount!=undefined)
     // {console.log("no updates since not ccorrect in updateamount")
     // return ;}
@@ -226,17 +228,17 @@ class Message {
 
 const initP2PServer = (p2pPort) => {
     const server = new WebSocket.Server({port: p2pPort});
-    console.log("came to initp2pserver")
+    // console.log("came to initp2pserver")
     server.on('connection', (ws) => {
         initConnection(ws);
     });
-    console.log('listening websocket p2p port on: ' + p2pPort);
+    // console.log('listening websocket p2p port on: ' + p2pPort);
 };
 
 const getSockets = () => sockets;
 
 const initConnection = (ws) => {
-    console.log("We came to initConnection")
+    // console.log("We came to initConnection")
     sockets.push(ws);
     initMessageHandler(ws);
     initErrorHandler(ws);
@@ -254,46 +256,42 @@ const initMessageHandler = (ws) => {
     ws.on('message', (data) => {
 
         try {
-            console.log("we in initmessagehandller")
+            // console.log("we in initmessagehandller")
             const message = JSON.parse(data)
             if (message === null) {
-                console.log('could not parse received JSON message: ' + data);
+                // console.log('could not parse received JSON message: ' + data);
                 return;
             }
-            console.log('Received message: %s',message);
+            // console.log('Received message: %s',message);
             switch (message.type) {
                 case MessageType.QUERY_LATEST:
                     write(ws, "added the peer succesfully");
                     break;
-                case MessageType.QUERY_ALL:
-                    // write(ws, "we in query_all"+responseChainMsg());
-                    write(ws,"we in queryall")
-                    break;
+                
                 case MessageType.RESPONSE_BLOCKCHAIN:
                     const receivedBlocks = message;
                     if (receivedBlocks === null) {
-                        console.log('invalid blocks received: %s', JSON.stringify(message.data));
+                        // console.log('invalid blocks received: %s', JSON.stringify(message.data));
                         break;
                     }
                    
                     blocks.pop()
-                    console.log(blocks)
+                    // console.log(blocks)
                     updateAmount(receivedBlocks.data);
                   
                     break;
                 case MessageType.SENDING_DATA:
                     if(validateTransaction(message.data))
-                       {blocks.push(message.data)
-                        console.log("in initmessagehandler , successfully pushed")}
-                    else
-                    console.log("in initmessagehandler , failed to push block due to not valid signature")
+                       {blocks.push(message.data)}
+                        // console.log("in initmessagehandler , successfully pushed")}
+                    // console.log("in initmessagehandler , failed to push block due to not valid signature")
                     break;
                 default:
-                    console.log("agilla macha @initMessageHandler")
+                    // console.log("agilla macha @initMessageHandler")
             
             }
         } catch (e) {
-            console.log(e);
+            // console.log(e);
         }
     });
 };
@@ -316,7 +314,7 @@ const responseLatestMsg = (block) => ({
 
 const initErrorHandler = (ws) => {
     const closeConnection = (myWs) => {
-        console.log('connection failed to peer: ' + myWs.url);
+        // console.log('connection failed to peer: ' + myWs.url);
         sockets.splice(sockets.indexOf(myWs), 1);
     };
     ws.on('close', () => closeConnection(ws));
@@ -341,7 +339,7 @@ const connectToPeers = (li) => {
         initConnection(ws);
     });
     ws.on('error', () => {
-        console.log('connection failed');
+        // console.log('connection failed');
         return false
     });
 }

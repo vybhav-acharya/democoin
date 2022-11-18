@@ -1,6 +1,6 @@
 var bodyParser =require( 'body-parser');
 var express =require('express');
-
+const cors = require('cors');
 
 var {
     Block, generatenextBlockWithTransaction, generateRawNextBlock, getAccountBalance,
@@ -9,12 +9,13 @@ var {
 
 var {getPublicFromWallet, initWallet} =require( './wallet');
 
-const httpPort =process.env.HTTP_PORT || 3001;
-const p2pPort = process.env.P2P_PORT || 6001
-;
+const httpPort =process.env.HTTP_PORT||3001;
+
+const p2pPort = process.env.P2P_PORT || 6001;
 
 const initHttpServer = (myHttpPort) => {
     const app = express();
+    app.use(cors())
     app.use(bodyParser.json());
 
     app.use((err, req, res, next) => {
@@ -28,7 +29,7 @@ const initHttpServer = (myHttpPort) => {
     })
 
     app.get('/blocks', (req, res) => {
-        console.log(getBlockchain())
+        // console.log(getBlockchain())
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(getBlockchain()));
     });
@@ -51,22 +52,24 @@ const initHttpServer = (myHttpPort) => {
 
     app.get('/address', (req, res) => {
         const address = getPublicFromWallet();
-        res.send({'address': address});
+       
+        res.status(200).json({'address': address})
+        
     });
   
     app.post('/mineTransaction', (req, res) => {
-        const sender = req.body.data.sender;
-        const receiver=req.body.data.receiver;
-        const amount = req.body.data.amount;
-        try {
-            const resp = generatenextBlockWithTransaction(sender,receiver, amount,getAccountBalance());
-            res.send(resp)
+        // console.log(req.body)
+        const sender = req.body.sender;
+        const receiver=req.body.receiver;
+        let amount = req.body.amount;
+        amount=parseFloat(amount)
+       
+        const resp = generatenextBlockWithTransaction(sender,receiver, amount,getAccountBalance());
+        
+        res.status(200).json({"message":resp})
             
             
-        } catch (e) {
-            console.log(e.message);
-            res.status(400).send(e.message);
-        }
+        
     });
 
    

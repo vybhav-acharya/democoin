@@ -1,1 +1,25 @@
 https://www.getpostman.com/collections/1b5591b26daaad2a7614
+  # node2:
+  #   environment:
+  #     - PEERS=ws://node1:6002
+  #     - HTTP_PORT=3002
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #   - "4002:3000"
+  #   - "3002:3002"
+  #   links:
+  #     - node1:node1
+  # node3:
+  #   environment:
+  #     - HTTP_PORT=3003
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #   - "4003:3000"
+  #   - "3003:3003"
+  #   links:
+  #     - node1:node1
+  #     - node2:node2

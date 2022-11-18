@@ -1,42 +1,59 @@
 version: '2'
 services:
   node1:
+    environment:
+      - HTTP_PORT=3001
+      - REACT_APP_HTTP_PORT=3001
+      - PRIVATE_KEY=/private_key
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-    - "3001:3001"
-  
-   
-     
+      - "3001:3001"
+      - "4001:3000"
+    volumes:
+      - /home/ubuntu/Desktop/democoin/frontend:/frontend
+      - /home/ubuntu/Desktop/democoin/node_modules:/node_modules
+      - /home/ubuntu/Desktop/democoin/src:/src
+      
+
+    
   node2:
     environment:
-      - PEERS=ws://node1:6002
+      - HTTP_PORT=3002
+      - REACT_APP_HTTP_PORT=3002
+      - PRIVATE_KEY=/private_key
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-    - "3002:3001"
     links:
       - node1:node1
+    ports:
+      - "3002:3002"
+      - "4002:3000"
+    volumes:
+      - /home/ubuntu/Desktop/democoin/frontend:/frontend
+      - /home/ubuntu/Desktop/democoin/node_modules:/node_modules
+      - /home/ubuntu/Desktop/democoin/src:/src
+      
+    
   node3:
+    environment:
+      - HTTP_PORT=3003
+      - REACT_APP_HTTP_PORT=3003
+      - PRIVATE_KEY=/private_key
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-    - "3003:3001"
+      - "3003:3003"
+      - "4003:3000"
     links:
       - node1:node1
       - node2:node2
-   
-  # node3:
-  #   environment:
-  #     - PEERS=ws://node2:6003
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   ports:
-  #   - "3003:3001"
-  #   links:
-  #     - node1:node1
-  
+    volumes:
+      - /home/ubuntu/Desktop/democoin/frontend:/frontend
+      - /home/ubuntu/Desktop/democoin/node_modules:/node_modules
+      - /home/ubuntu/Desktop/democoin/src:/src
+     
+    
