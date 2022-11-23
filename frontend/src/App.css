@@ -1,7 +1,11 @@
 .App {
   text-align: left;
+  margin: 30px 30px;
 }
-
+h5,h3{
+  margin:0;
+  padding:0;
+}
 
 .styled-table {
   border-collapse: collapse;

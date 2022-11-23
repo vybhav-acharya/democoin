@@ -3,17 +3,18 @@ var express =require('express');
 const cors = require('cors');
 
 var {
-    Block, generatenextBlockWithTransaction, generateRawNextBlock, getAccountBalance,
+    Block, generateTransaction, generateRawNextBlock, getAccountBalance,
     getBlockchain,  connectToPeers, getSockets, initP2PServer,getBlocks
 } =require( './blockchain');
-
+var {Transaction}=require('./transaction')
 var {getPublicFromWallet, initWallet} =require( './wallet');
 
 const httpPort =process.env.HTTP_PORT||3001;
 
 const p2pPort = process.env.P2P_PORT || 6001;
 
-const initHttpServer = (myHttpPort) => {
+const initHttpServer = (myHttpPort) => 
+{
     const app = express();
     app.use(cors())
     app.use(bodyParser.json());
@@ -37,7 +38,7 @@ const initHttpServer = (myHttpPort) => {
 
 
     app.get('/mineBlock', (req, res) => {
-        const newBlock = generateRawNextBlock();
+        const newBlock = generateRawNextBlock(httpPort);
         if (newBlock === null) {
             res.status(400).send('could not generate block');
         } else {
@@ -57,32 +58,35 @@ const initHttpServer = (myHttpPort) => {
         
     });
   
-    app.post('/mineTransaction', (req, res) => {
-        // console.log(req.body)
-        const sender = req.body.sender;
-        const receiver=req.body.receiver;
-        let amount = req.body.amount;
-        amount=parseFloat(amount)
-       
-        const resp = generatenextBlockWithTransaction(sender,receiver, amount,getAccountBalance());
+    app.post('/createTransaction', (req, res) => {
+        const transaction=new Transaction(req.body.sender,req.body.receiver,parseFloat(req.body.amount))
         
-        res.status(200).json({"message":resp})
-            
-            
-        
+        console.log(transaction)
+        const resp = generateTransaction(transaction);
+        res.status(200).json({"message":resp})  
     });
-
-   
-
-
     app.get('/peers', (req, res) => {
         res.send(getSockets().map((s) => s._socket.remoteAddress + ':' + s._socket.remotePort));
     });
-    
-        app.post('/addPeer', (req, res) => {
-            let y=connectToPeers(req.body.peer);
-            if(y)res.send("added successfully")
-            else res.send("failed");
+        app.get('/addPeer', (req, res) => {
+            let data
+            if(process.env.HTTP_PORT=="3003")
+            {
+                data=["ws://node2:localhost:6001",
+                "ws://node1:localhost:6001"]
+            }
+            if(process.env.HTTP_PORT=="3002")
+            {
+                data=[
+                "ws://node1:localhost:6001"]
+            }
+            if(process.env.HTTP_PORT=="3001")res.status(200).send("No peers to add")
+            else{
+            // let y=connectToPeers(req.body.peer);
+            let y=connectToPeers(data);
+            if(y)res.status(200).send("added successfully")
+            else res.status(500).send("failed");
+            }
         });
    
 

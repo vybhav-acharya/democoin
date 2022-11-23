@@ -7,13 +7,12 @@ services:
       - PRIVATE_KEY=/private_key
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Docker_setter
     ports:
       - "3001:3001"
       - "4001:3000"
     volumes:
       - /home/ubuntu/Desktop/democoin/frontend:/frontend
-      - /home/ubuntu/Desktop/democoin/node_modules:/node_modules
       - /home/ubuntu/Desktop/democoin/src:/src
       
 
@@ -25,7 +24,7 @@ services:
       - PRIVATE_KEY=/private_key
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Docker_setter
     links:
       - node1:node1
     ports:
@@ -33,7 +32,6 @@ services:
       - "4002:3000"
     volumes:
       - /home/ubuntu/Desktop/democoin/frontend:/frontend
-      - /home/ubuntu/Desktop/democoin/node_modules:/node_modules
       - /home/ubuntu/Desktop/democoin/src:/src
       
     
@@ -44,7 +42,7 @@ services:
       - PRIVATE_KEY=/private_key
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Docker_setter
     ports:
       - "3003:3003"
       - "4003:3000"
@@ -53,7 +51,6 @@ services:
       - node2:node2
     volumes:
       - /home/ubuntu/Desktop/democoin/frontend:/frontend
-      - /home/ubuntu/Desktop/democoin/node_modules:/node_modules
       - /home/ubuntu/Desktop/democoin/src:/src
      
     

@@ -12,7 +12,6 @@ const getPrivateFromWallet = () => {
     const buffer = readFileSync(privateKeyLocation, 'utf8');
     return buffer.toString();
 };
-
 const getPublicFromWallet = () => {
     const privateKey = getPrivateFromWallet();
     const key = EC.keyFromPrivate(privateKey, 'hex');
@@ -45,6 +44,7 @@ const deleteWallet = () => {
 
 
 const sign=(blockData,sender)=>{
+    console.log(`In wallet ${sender}`)
     const ec1 = new ec('secp256k1');
     let key=""
    if(sender=="")
@@ -59,12 +59,12 @@ else
 const validateTransaction=(blockData)=>{
     if(blockData.sender=="")
     return true;
-    let x={"sender":blockData["sender"],"receiver":blockData["receiver"],"amount":blockData["amount"]}
+   
     console.log("senedr is "+blockData.sender)
     const ec1 = new ec('secp256k1');
     const key = ec1.keyFromPublic(blockData.sender, 'hex');
  
-    const validSignature =key.verify(x.toString(),blockData.signature)
+    const validSignature =key.verify(blockData.toString(),blockData.signature)
    
     return validSignature
 }

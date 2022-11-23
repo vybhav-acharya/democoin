@@ -1,13 +1,14 @@
 #bin/bash
-docker compose up  $1 $2 $3
-sleep 10
-curl -X POST http://localhost:3003/addPeer -H "Content-Type: application/json"   -d '{ "peer": [
-        "ws://node1:localhost:6001",
-        "ws://node2:localhost:6001"
-    ]                              
-}'
+docker compose up  -d $2 $3
+echo "done with docker compose"
 
-curl -X POST http://localhost:3002/addPeer -H "Content-Type: application/json"   -d '{ "peer": [
-        "ws://node1:localhost:6001" 
-    ]                              
-}'
+sleep 10
+
+#/bin/bash 
+xdg-open http://localhost:4001
+#/bin/bash 
+xdg-open http://localhost:4002
+#/bin/bash 
+xdg-open http://localhost:4003
+
+

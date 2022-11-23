@@ -1,0 +1,18 @@
+    
+  # node3:
+  #   environment:
+  #     - HTTP_PORT=3003
+  #     - REACT_APP_HTTP_PORT=3003
+  #     - PRIVATE_KEY=/private_key
+  #   build:
+  #     context: .
+  #     dockerfile: Docker_setter
+  #   ports:
+  #     - "3003:3003"
+  #     - "4003:3000"
+  #   links:
+  #     - node1:node1
+  #     - node2:node2
+  #   volumes:
+  #     - /home/ubuntu/Desktop/democoin/frontend:/frontend
+  #     - /home/ubuntu/Desktop/democoin/src:/src
